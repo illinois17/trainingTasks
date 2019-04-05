@@ -11,19 +11,49 @@ namespace BinarySearch_Words
     {
         static void Main(string[] args)
         {
-            string text = File.ReadAllText("text.txt");
+            string text = string.Empty;
             string search = string.Empty;
-
-            while(search!="exit")
+            string commands = "-help/? - посмотреть доступные команды\n-change - изменить файл\n-exit - выйти из программы";
+            changingPath:
+            Console.WriteLine("Введите путь к файлу:");
+            try
             {
-                Console.WriteLine("Введите слово которое необходимо найти:");
-                search = Console.ReadLine();
+                string path = Console.ReadLine();
+                text = File.ReadAllText(path);
+                Console.WriteLine("help /? -чтобы узнать доступные команды");
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("Путь к файлу не корректный или файла не существует");
+                goto changingPath;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Из тебя бы вышел хороший тестировщик, ты умудрился вызвать ошибку:"+e.Message);
+                goto changingPath;
+            }
+            while (search!="exit")
+            {                
                 try
                 {
+                    Console.WriteLine("Введите слово которое необходимо найти: ");
+                    search = Console.ReadLine();
+                    switch(search)
+                    {
+                        case "-exit":
+                            break;
+                        case "-change":
+                        case "-changetext":
+                            goto changingPath;
+                        case "-help":
+                        case "?":
+                            Console.WriteLine(commands);
+                            continue;
+                    }
                     int foundPos=FindTheWord(text, search);
                     Console.WriteLine("Слово присутствует в тексте\n");
                 }
-                catch (ArgumentException e)
+                catch (BinarySearchFoundNothing e)
                 {
                     Console.WriteLine(e.Message+"\n");
                 }                
@@ -57,10 +87,16 @@ namespace BinarySearch_Words
                     if (sortedWords[mid] == item)
                         return mid;
                 }
-                throw new ArgumentException(String.Format("Слово \"{0}\" не найденно в тексте",searchWord));
+                throw new BinarySearchFoundNothing(String.Format("Слово \"{0}\" не найденно в тексте",searchWord));
             }
 
         }
+    }
+    class BinarySearchFoundNothing : Exception
+    {
+        public BinarySearchFoundNothing(string message)
+            : base(message)
+        { }
     }
 }
 
