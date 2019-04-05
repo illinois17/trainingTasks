@@ -15,33 +15,36 @@ namespace BinarySearch_Words
             string search = string.Empty;
             string commands = "-help/? - посмотреть доступные команды\n-change - изменить файл\n-exit - выйти из программы";
             changingPath:
-            Console.WriteLine("Введите путь к файлу:");
             try
             {
+                Console.WriteLine("Введите путь к файлу:");
                 string path = Console.ReadLine();
+                if (path == "-exit")
+                    Environment.Exit(0);
                 text = File.ReadAllText(path);
-                Console.WriteLine("help /? -чтобы узнать доступные команды");
             }
             catch (IOException e)
             {
-                Console.WriteLine("Путь к файлу не корректный или файла не существует");
+                Console.WriteLine("Путь к файлу не корректный или файла не существует : " + e.Message);
                 goto changingPath;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Из тебя бы вышел хороший тестировщик, ты умудрился вызвать ошибку:"+e.Message);
+                Console.WriteLine("Из тебя вышел бы хороший тестировщик,\n ты умудрился вызвать ошибку:"+e.Message);
                 goto changingPath;
             }
             while (search!="exit")
             {                
                 try
                 {
+                    Console.WriteLine("help /? -чтобы узнать доступные команды");
                     Console.WriteLine("Введите слово которое необходимо найти: ");
                     search = Console.ReadLine();
                     switch(search)
                     {
                         case "-exit":
-                            break;
+                            Environment.Exit(0);
+                            continue;
                         case "-change":
                         case "-changetext":
                             goto changingPath;
