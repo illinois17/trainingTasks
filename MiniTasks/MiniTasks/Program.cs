@@ -10,16 +10,17 @@ namespace MiniTasks
     {
         static void Main(string[] args)
         {
-            int[] numbers = { 11, 11, 33, 9534, 2123, 43, 23, 784, 45, 1234, 5, 753, -123, 2 };
-            string[] words = { "1qwe", "sfsd", "se5s", "adqs3", "Aaaa", "Bbbbb", "1qweqw", "sdsa12", "sfsd", "dsf" };
+            int[] numbers = {11, -11, 33, 9534, 2123, 43, 23, 784, 45, 1234, 5, 753, -123, 2};
+            string[] words = {"1qwe", "sfsd", "se5s", "adqs3", "Aaaa", "Bbbbb", "1qweqw", "sdsa12", "sfsd", "dsf"};
+            string[] wordsUpper = {"", "QWES", "SAXC", "ZXC", "AAAA", "", "WDXZZ2", "SDAXVR", "SA", ""};
             int number = 5;
             int number2 = 10;
             int digit = -2;
             char C = 's';
             //1
-            var query1   = numbers.First(f => f > 0);
+            var query1 = numbers.First(f => f > 0);
             var query1_1 = numbers.Last(f => f < 0);
-            Console.WriteLine("LinqBegin1: "+query1);
+            Console.WriteLine("LinqBegin1: " + query1);
             Console.WriteLine("LinqBegin1: " + query1_1);
 
             //2
@@ -38,8 +39,10 @@ namespace MiniTasks
             {
                 Console.WriteLine("LinqBegin4: " + "Error");
             }
+
             //5
-            var query5 = words.Where(n => n.Length > 1 && n.StartsWith(C.ToString()) && n.EndsWith(C.ToString())).Count();
+            var query5 = words.Where(n => n.Length > 1 && n.StartsWith(C.ToString()) && n.EndsWith(C.ToString()))
+                .Count();
             Console.WriteLine("LinqBegin5: " + query5);
             //6
             var query6 = words.Sum(n => n.Length);
@@ -101,7 +104,8 @@ namespace MiniTasks
             Console.WriteLine();
 
             //22
-            var query22 = words.Select(n => n.ToUpper()).Where(n => n.Length == number && Char.IsDigit(n, n.Length - 1)).OrderBy(n => n);
+            var query22 = words.Select(n => n.ToUpper()).Where(n => n.Length == number && Char.IsDigit(n, n.Length - 1))
+                .OrderBy(n => n);
             Console.WriteLine("LinqBegin22");
             foreach (var word in query22) Console.Write(word + " | ");
             Console.WriteLine();
@@ -121,7 +125,7 @@ namespace MiniTasks
             Console.WriteLine("LinqBegin25" + query25);
             //26
             var query26 = words.Where((n, i) => i < number || i > number2).Average(n => n.Length);
-            Console.WriteLine("LinqBegin26"+query26);
+            Console.WriteLine("LinqBegin26" + query26);
             //27
             var query27 = numbers.SkipWhile(n => n <= number).Where(n => n >= 0 && n % 2 != 0).Reverse();
             Console.WriteLine("LinqBegin27");
@@ -130,26 +134,58 @@ namespace MiniTasks
 
             //28
             var query28 = words.TakeWhile(n => n.Length <= number).Where(n => Char.IsLetter(n, n.Length - 1))
-                                .OrderByDescending(n => n.Length).ThenBy(n => n);
+                .OrderByDescending(n => n.Length).ThenBy(n => n);
             Console.WriteLine("LinqBegin28");
             foreach (var word in query28) Console.Write(word + " | ");
             Console.WriteLine();
             //29
-            var query29 = numbers.Distinct().TakeWhile(n => n <= number).Union(numbers.Distinct().Skip(number2 - 1)).OrderByDescending(n => n);
+            var query29 = numbers.Distinct().TakeWhile(n => n <= number).Union(numbers.Distinct().Skip(number2 - 1))
+                .OrderByDescending(n => n);
             Console.WriteLine("LinqBegin29");
             foreach (var num in query29) Console.Write(num + " | ");
             Console.WriteLine();
             //30
-            var query30 = numbers.Where(n => n % 2 == 0).Except(numbers.Skip(number - 1)).OrderByDescending(n => n).Distinct().Reverse();
+            var query30 = numbers.Where(n => n % 2 == 0).Except(numbers.Skip(number - 1)).OrderByDescending(n => n)
+                .Distinct().Reverse();
             Console.WriteLine("LinqBegin30");
             foreach (var num in query30) Console.Write(num + " | ");
             Console.WriteLine();
             //31
-            var query31 = words.Take(number).Intersect(words.Reverse().TakeWhile(n => !Char.IsDigit(n, n.Length - 1)).Reverse())
+            var query31 = words.Take(number)
+                .Intersect(words.Reverse().TakeWhile(n => !Char.IsDigit(n, n.Length - 1)).Reverse())
                 .OrderBy(n => n.Length).ThenBy(n => n);
             Console.WriteLine("LinqBegin31");
             foreach (var word in query31) Console.Write(word + " | ");
-            Console.ReadLine();
+            Console.WriteLine();
+            //32
+            var query32 = words.Select(s => s[0]).Reverse().ToArray<char>();
+            foreach (var ch in query32) Console.Write(ch + " | ");
+            Console.WriteLine();
+            //33
+            var query33 = numbers.Where(w => w >= 0).Select(s => s % 10).Distinct();
+            foreach (var num in query33) Console.Write(num + " | ");
+            Console.WriteLine();
+            //34
+            var query34 = numbers.Where(w => w >= 0 && w % 2 != 0).Select(s=>s.ToString()).OrderBy(o => o);
+            foreach (var wordnum in query34) Console.Write(wordnum + " | ");
+            Console.WriteLine();
+            //35
+            var query35 = numbers.Select((n, i) => n * i).Where(w=>w>-100&&w<=-10 || w>=10&&w<100).Reverse();
+            foreach (var num in query35) Console.Write(num + " | ");
+            Console.WriteLine();
+            //36
+            var query36 = words.Where(w => w.Length % 2 != 0).Select(s => s[0])
+                .Concat(words.Where(w => w.Length % 2 == 0).Select(s => s[s.Length - 1])).ToArray<char>().OrderBy(o=>o);
+            foreach (var wordnum in query36) Console.Write(wordnum + " | ");
+            Console.WriteLine();
+            //37
+            var query37 = words.Select((s, i) => s+i).Where(w=>!Char.IsDigit(w[0]));
+            foreach (var word in query37) Console.Write(word + " | ");
+            Console.WriteLine();
+            //38
+            //var query38 = numbers.Where((_, i) => (i + 1) % 3 != 0).Select((s, i) => i % 2 == 0 ? s * 2 : s);
+
+            //Console.ReadLine();
         }
     }
 }

@@ -36,11 +36,32 @@ namespace Grades_LINQ
                 })
                 .OrderBy(o => o.LastName)
                 .ThenBy(t => t.Initials);
+            
+
+
             Console.WriteLine("Студенты:");
             foreach (var student in req)
                 Console.WriteLine("{0}, {1}, Предмет:{2}, Средняя оценка:{3}", student.LastName, student.Initials, student.Subject, student.AverageGrade);
 
+            var req2 = students.SelectMany(n => n.LastName.Distinct(),
+                (n, s) => new[]
+                {
+                    new {Subject = "Алгебра",LastName = n.LastName},
+                    new {Subject = "Информатика",LastName = n.LastName},
+                    new {Subject = "Геометрия",LastName = n.LastName}
+                });
+            //.Except(students.Select(n => n.Subject));
+            foreach (var dif in req2)
+            {
+                foreach (var d in dif)
+                    Console.Write(d);
+            }
+            
+
             Console.ReadLine();
+
+        
+
         }
         class Student
         {
