@@ -13,7 +13,7 @@ namespace BinarySearch_Words
         {
             string text = string.Empty;
             string search = string.Empty;
-            string commands = "-help/? - посмотреть доступные команды\n-change - изменить файл\n-exit - выйти из программы";
+            const string commands = "-help/?  - доступные команды\n-change - изменить файл\n-exit - выйти из программы";
             changingPath:
             try
             {
@@ -21,7 +21,7 @@ namespace BinarySearch_Words
                 string path = Console.ReadLine();
                 if (path == "-exit")
                     Environment.Exit(0);
-                text = File.ReadAllText(path);
+                text = File.ReadAllText(path ?? throw new InvalidOperationException());
             }
             catch (IOException e)
             {
@@ -63,14 +63,14 @@ namespace BinarySearch_Words
             }            
 
         }
-        static int FindTheWord(string text, string searchWord)
+        public static int FindTheWord(string text, string searchWord)
         {
             char[] wordsSeparators = { '.', ',', '-', ' ', '(', ')' };
-            List<string> words = text.Split(wordsSeparators).ToList<string>();
+            var words = text.Split(wordsSeparators).ToList<string>();
             words.Sort();
             return BinarySearch(words, searchWord, 0, words.Count - 1, 0);
 
-            int BinarySearch(List<string> sortedWords, string item, int first, int last, int wordIndex)
+            int BinarySearch(IReadOnlyList<string> sortedWords, string item, int first, int last, int wordIndex)
             {
                 if (last == first && sortedWords[last] == item)
                     return last;
@@ -90,12 +90,13 @@ namespace BinarySearch_Words
                     if (sortedWords[mid] == item)
                         return mid;
                 }
-                throw new BinarySearchFoundNothing(String.Format("Слово \"{0}\" не найденно в тексте",searchWord));
+                throw new BinarySearchFoundNothing($"Слово \"{searchWord}\" не найденно в тексте");
             }
 
         }
     }
-    class BinarySearchFoundNothing : Exception
+
+    internal class BinarySearchFoundNothing : Exception
     {
         public BinarySearchFoundNothing(string message)
             : base(message)
