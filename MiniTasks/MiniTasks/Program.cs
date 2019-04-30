@@ -10,10 +10,11 @@ namespace MiniTasks
     {
         static void Main(string[] args)
         {
-            int[] numbers = {11, -11, 33, 9534, 2123, 43, 23, 784, 45, 1234, 5, 753, -123, 2};
-            string[] words = {"1qwe", "sfsd", "se5s", "adqs3", "Aaaa", "Bbbbb", "1qweqw", "sdsa12", "sfsd", "dsf"};
-            string[] wordsUpper = {"", "QWES", "SAXC", "ZXC", "AAAA", "", "WDXZZ2", "SDAXVR", "SA", ""};
-            int number = 5;
+            int[] numbers = {11, -11, 33, 9534, 2123, 3, 23, 784, 4, 1234, 5, 753, -123, 2};
+            int[] numbers2 = {1, 12, 6, 234, 223, 243, 2, 74, 142, 144, -5, -753, 1232, 24};
+            string[] words = {"1qwE", "sfSd", "sE5s", "adXs3", "Aaaa", "Bbbbb", "1qwAqw", "sdNa12", "sfsMd", "dsKf"};
+            string[] wordsUpper = {"", "QWES", "SAXC", "ZXC", "AAAA", "", "WDXZZ", "SDAXVR", "SA", ""}; //with Empty strings
+            int number = 5; //number>0
             int number2 = 10;
             int digit = -2;
             char C = 's';
@@ -179,13 +180,104 @@ namespace MiniTasks
             foreach (var wordnum in query36) Console.Write(wordnum + " | ");
             Console.WriteLine();
             //37
-            var query37 = words.Select((s, i) => s+i).Where(w=>!Char.IsDigit(w[0]));
+            var query37 = wordsUpper.Select((s, i) => !string.IsNullOrEmpty(s)? s+i: string.Empty).Where(w=>!string.IsNullOrEmpty(w));
             foreach (var word in query37) Console.Write(word + " | ");
             Console.WriteLine();
             //38
-            //var query38 = numbers.Where((_, i) => (i + 1) % 3 != 0).Select((s, i) => i % 2 == 0 ? s * 2 : s);
+            var query38 = numbers.Where((_, i) => (i + 1) % 3 != 0).Select((s, i) => i % 2 == 0 ? s * 2 : s);
+            foreach (var word in query38) Console.Write(word + " | ");
+            Console.WriteLine();
+            //39
+            var query39 = words.SelectMany(w => w.Where(char.IsDigit));
+            foreach (var charIn in query39) Console.Write(charIn + " ");
+            Console.WriteLine();
+            //40
+            var query40 = words.SelectMany(n => words.Where(w => w.Length >= number).Reverse());
+            foreach (var charIn in query40) Console.Write(charIn + " ");
+            Console.WriteLine();
+            //41
+            string[] wordsIn = {"Qwesd.Asdfg","Asd.Azcssa","Xxcbs.Zzsdaszvt","R1wds.Xg56.Bb.Fdbyo.Ebfdw"};
+            var query41 = wordsIn.SelectMany(w => w.Split('.')).Where(n=>n.Length==number).OrderBy(o=>o);
+            foreach (var word in query41) Console.Write(word + " ");
+            Console.WriteLine();
+            //42
+            var query42 = words.SelectMany((w, i) => i % 2 == 0 ? w.Where(char.IsLower) : w.Where(char.IsUpper));
+            foreach (var charIn in query42) Console.Write(charIn + " ");
+            Console.WriteLine();
+            //43
+            var query43 = words.SelectMany((w, i) =>
+                i <= number ? w.Where((_, ic) => ic % 2 == 0) : w.Where((_, ic) => ic % 2 != 0)).Reverse();
+            foreach (var charIn in query43) Console.Write(charIn + " ");
+            Console.WriteLine();
+            //44
+            var query44 = numbers.Where(n => number > n).Concat(numbers2.Where(n2=>n2<number2)).OrderBy(o=>o);
+            foreach (var nums in query44) Console.Write(nums + " ");
+            Console.WriteLine();
+            //45
+            string[] wordsWithNum = {"1SAD", "ASDX2", "ASD234R", "ASD13", "SDF4RFW", "AS", "21SWSD", "SAFF31", "ASC34", "SCAAX21"};
+            string[] wordsWithNum2 = {"SDF", "SDF342R", "SDF24", "SDFS3", "SDFW", "WFW32", "SDFSVCX4", "DFGFDF", "APFC", "KYI6"};
+            var query45 = wordsWithNum.Where(w => w.Length == number)
+                .Concat(wordsWithNum2.Where(w2 => w2.Length == number2));
+            foreach (var nums in query45) Console.Write(nums + " ");
+            Console.WriteLine();
+            //46
+            int[] pairNumbers = { 15, 12, 6, 234, 223, 243, 82, 74, 142, 144, 5, 753, 1232, 24 };
+            int[] pairNumbers2 = { 14, 312, 46, 2534, 5273, 243, 28, 74, 142, 144, 5, 53, 1233, 42 };
 
-            //Console.ReadLine();
+            var query46 = pairNumbers
+                .Join(pairNumbers2, o => o % 10, i => i%10, (o, i) => new string[] {$"{o}-{i}"}).SelectMany(n=>n);
+            foreach (var word in query46) Console.Write(word + " ");
+            Console.WriteLine();
+            //47 Упорядочить
+            var query47 = pairNumbers
+                .Join(pairNumbers2, o => o % 10,  i=> Char.GetNumericValue(i.ToString()[0]), (o, i) => new{o,i}).Select(n => $"{n.o}:{n.i}");
+            foreach (var word in query47) Console.Write(word + " ");
+            Console.WriteLine();
+            //48
+            var query48 = wordsWithNum.Join(wordsWithNum2, o => o.Length, i => i.Length, (o, i) => new {o, i})
+                .OrderBy(ob => ob.o).ThenByDescending(tb => tb.i).Select(s=>$"{s.o}:{s.i}");
+            foreach (var word in query48) Console.Write(word + " ");
+            Console.WriteLine();
+            //49 Упорядочить
+            string[] words1 = { "SQD23", "SSASD1", "ASD3", "ASCFV", "SAD21", "CXZA21", "DVTGD", "DVAD32E", "ASD3E", "DASFA" };
+            string[] words2 = { "GHHN3", "SSADFS", "AXZC", "ZZXFV", "ZXC21", "CXXCZ1", "DVZXC", "DDFW32E", "ASFDE", "SFA" };
+            string[] words3 = { "SQGN3", "SSHNGH", "AGHN", "GSCFV", "SHJN1", "CXHJN1", "DVHJN", "NKJH32E", "ASVFD", "DASDF" };
+
+            var query49 = words1
+                .Join(words2, o => o.First(), i => i.First(), (o, i) => new {o,i})
+                .Join(words3,o=>o.o.First(),i=>i.First(),(o2,i2)=>new {o2.o , o2.i , i2})
+                .SelectMany(s=> new string[]{ $"{s.o}={s.i}={s.i2}"});
+            foreach (var word in query49) Console.Write(word + " ");
+            Console.WriteLine();
+            //50
+            var query50 = words1.GroupJoin(words2, o => o.First(), i => i.First(), (o, ia) => new{o, matchesCount = ia.Count()}).Select(s=>$"{s.o}:{s.matchesCount}");
+            foreach (var word in query50) Console.Write(word + " ");
+            Console.WriteLine();
+            //51
+            var query51 = pairNumbers.GroupJoin(pairNumbers2, o => o % 10, i => i % 10,
+                (o, ia) => new {o, Summa = ia.Sum()}).Select(s=>$"{s.Summa}:{s.o}");
+            foreach (var word in query51) Console.Write(word + " ");
+            Console.WriteLine();
+            //52
+            var query52 = words1.Where(w=>char.IsDigit(w.Last()))
+                .Join(words2, o => true, i => char.IsDigit(i.Last()), (o, i) => new { o,i })
+                .OrderBy(ob=>ob.o).ThenByDescending(tb=>tb.i)
+                .Select(sm=>$"{sm.o}={sm.i}");
+            foreach (var word in query52) Console.Write(word + " ");
+            Console.WriteLine();
+
+            //53
+            var query53 = pairNumbers.GroupJoin(pairNumbers2, o => 0, i => 0, (o, ia) => new {o, ia})
+                .SelectMany(s => s.ia.Select(b => b + s.o));
+            foreach (var word in query53) Console.Write(word + " ");
+            Console.WriteLine();
+            //54
+            Console.WriteLine("TEST");
+            var query54 = words1.GroupJoin(words2, o => o[0], i => i[0], (o, ia) =>ia.DefaultIfEmpty("0").Select(d=> new { o, ia })).Select(s => s.Select(sm=> $"{sm.ia}.{sm.ia}") );
+            foreach (var word in query54) Console.Write(word + " ");
+            Console.WriteLine();
+            Console.WriteLine("TEST");
+            Console.ReadLine();
         }
     }
 }

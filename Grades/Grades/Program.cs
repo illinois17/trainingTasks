@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Grades_LINQ
+namespace Grades
 {
     class Program
     {
@@ -25,16 +26,6 @@ namespace Grades_LINQ
                 new Student("Рогов", "А.А.", 5, "Геометрия", 4)
             };
             string input = String.Empty;
-
-
-            var uniq = students.Union(students.Select(n=>new
-            {
-
-            }).ToList());
-
-
-
-
             var req = students
                 .GroupBy(n => new { n.LastName, n.Initials, n.Subject })
                 .Select(n => new
@@ -42,51 +33,35 @@ namespace Grades_LINQ
                     LastName = n.Key.LastName,
                     Initials = n.Key.Initials,
                     Subject = n.Key.Subject,
-                    AverageGrade = n.Average(x => x.Grades)
+                    Grades = n.Average(x => x.Grades)
                 })
+                //.Join(students,s=>s.Subject,n,v)
                 .OrderBy(o => o.LastName)
                 .ThenBy(t => t.Initials);
-            var reqt = students
-                .GroupBy(n => new { n.LastName, n.Initials, n.Subject })
-                .Select(n => new
-                {
-                    LastName = n.Key.LastName,
-                    Initials = n.Key.Initials,
-                    Subject = n.Key.Subject,
-                    AverageGrade = n.Key. n.Average(x => x.Grades)
-                })
-                .OrderBy(o => o.LastName)
-                .ThenBy(t => t.Initials);
-            //var reqt = req.ThenBy();
-            var reqUnion = students.Select(n => new
-            {
-                LastName = n.LastName,
-                Initials = n.Initials,
-                Subject = n.Subject,
-                AverageGrade = 0.00f
+           
 
-            }).Distinct().ToList();
-
-            var req2 = students
-                .GroupBy(n => new { n.LastName, n.Initials })
-                .Select(n => new
-                {
-                    LastName = n.Key.LastName,
-                    Initials = n.Key.Initials,
-                    Subject = n.GroupBy(s => s.Subject)
-                        .Select(x => new { Subject = x.Key, AverageGrade = x.Average(g => g.Grades) }).ToList()
-
-                })
-                .OrderBy(o => o.LastName)
-                .ThenBy(t => t.Initials);
 
             Console.WriteLine("Студенты:");
             foreach (var student in req)
-                Console.WriteLine("{0}, {1}, Предмет:{2}, Средняя оценка:{3}", student.LastName, student.Initials, student.Subject, student.AverageGrade);
-            
+                Console.WriteLine("{0}, {1}, Предмет:{2}, Средняя оценка:{3}", student.LastName, student.Initials, student.Subject, student.Grades);
+            Console.WriteLine("___________________________________");
+            var req2 = students.Select(n => new 
+                {
+                    Initials = n.Initials,
+                    Subject = n.Subject,
+                    Grades = 0.00f
+
+                }).Distinct();
+            //.Except(students.Select(n => n.Subject));
+            foreach (var dif in req2)
+            {
+                Console.WriteLine(dif);
+            }
+
+
             Console.ReadLine();
 
-        
+
 
         }
         class Student
