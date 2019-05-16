@@ -19,6 +19,7 @@ namespace MiniTasks
             int number2 = 10;
             int digit = -2;
             char C = 's';
+            Console.ReadLine();
             //1
             var query1 = numbers.First(f => f > 0);
             var query1_1 = numbers.Last(f => f < 0);
@@ -310,7 +311,6 @@ namespace MiniTasks
                 .ThenBy(tb=>tb.Key)
                 .Select(s2=>$"{s2.Sum}-{s2.Key}");
             QueryOut(query60);
-
             Console.ReadLine();
         }
 
