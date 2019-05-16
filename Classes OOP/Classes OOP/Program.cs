@@ -12,30 +12,25 @@ namespace Classes_OOP
         {
             Sandero myFirstCar = new Sandero(1.6, 14);
             Sandero mySecondCar = new Sandero(1.4, 14);
-            //Mascott myWorkCar = new Mascott();
-            myFirstCar.Beep();
+            Mascott myWorkCar = new Mascott(3.0, 16); myFirstCar.Beep();
             myFirstCar.ShowInfo();
             Console.WriteLine(Renault.Counter);
-            //myWorkCar.ShowInfo();
+            myWorkCar.ShowInfo();
             Console.ReadLine();
         }
 
         class Mascott : Renault
         {
-            private static string model = "Mascott";
-            private double engineCapacity = 1.6;
-            private int wheel = 14;
-
             public Mascott()
             {
-                model = "Mascott";
+                Model = "Mascott";
                 engineCapacity = 3.0;
                 wheel = 16;
             }
 
             public Mascott(double myEngineCapacity, int myWheel) : base(myEngineCapacity, myWheel)
             {
-                model = "Mascott";
+                Model = "Mascott";
             }
 
             public override void Drive()
@@ -51,26 +46,22 @@ namespace Classes_OOP
 
         class Sandero : Renault
         {
-            public static string model;
-           
-
             public Sandero()
             {
-                model = "Sandero";
+                Model = "Sandero";
                 engineCapacity = 1.6;
                 wheel = 14;
             }
 
             public Sandero(double myEngineCapacity, int myWheel) : base(myEngineCapacity, myWheel)
             {
-                model = "Sandero";
+                Model = "Sandero";
             }
         }
 
         abstract class Renault : ICar
         {
-            protected static readonly string Mark = "Renault";
-            protected static string model;
+            public const string mark = "Renault";
             protected double engineCapacity;
             protected DateTime issue;
             protected int wheel;
@@ -81,15 +72,14 @@ namespace Classes_OOP
                 this.issue = DateTime.Now;
             }
 
-            public Renault(double myEngineCapacity, int myWheel)
+            protected Renault(double myEngineCapacity, int myWheel) :this()
             {
-                Counter++;
                 engineCapacity = myEngineCapacity;
                 wheel = myWheel;
-                this.issue = DateTime.Now;
             }
 
             public static int Counter { get; private set; } = 0;
+            protected string Model { get; set; }
 
             public virtual void Drive()
             {
@@ -104,7 +94,7 @@ namespace Classes_OOP
             public void ShowInfo()
             {
                 Console.WriteLine(
-                    $"Марка и модель автомобиля: {Mark}{model}\nРадиус колёс:{this.wheel}; Объём двигателя{this.engineCapacity}\nДата выпуска:{this.issue}");
+                    $"Марка и модель автомобиля: {mark} {Model}\nРадиус колёс:{this.wheel}; Объём двигателя{this.engineCapacity}\nДата выпуска:{this.issue}");
             }
 
         }
